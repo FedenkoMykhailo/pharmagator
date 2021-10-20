@@ -15,8 +15,7 @@ sonarqube {
         property "sonar.projectKey", "FedenkoMykhailo_pharmagator"
         property "sonar.tests", "src/test"
         property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco.xml"
         property "sonar.junit.reportsPath", "build/test-results/*/TEST-*.xml"
     }
 }
@@ -57,8 +56,12 @@ jacocoTestReport {
     dependsOn test
     reports {
         xml.enabled(true)
-        csv.enabled(true)
+        csv.enabled(false)
         html.enabled(true)
+        //to create coverage report in html
+        html.destination file("${buildDir}/reports/coverage")
+        //for XML
+        xml.destination file("${buildDir}/reports/jacoco.xml")
     }
     finalizedBy jacocoTestCoverageVerification
 }
