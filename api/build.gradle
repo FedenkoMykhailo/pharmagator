@@ -2,11 +2,24 @@ plugins {
     id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group = 'com.eleks.academy'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "FedenkoMykhailo_pharmagator"
+        property "sonar.tests", "src/test"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+        property "sonar.junit.reportsPath", "build/test-results/*/TEST-*.xml"
+    }
+}
 
 configurations {
     compileOnly {
@@ -25,6 +38,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.24'
     implementation 'org.flywaydb:flyway-core:7.15.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -35,4 +50,26 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled(true)
+        csv.enabled(true)
+        html.enabled(true)
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled(false)
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
 }
