@@ -1,9 +1,11 @@
-package com.eleks.academy.pharmagator.dataproviders;
+package com.eleks.academy.pharmagator.dataproviders.impl;
 
+import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -19,7 +21,8 @@ public class DummyProviderImpl implements DataProvider {
         return MedicineDto.builder()
                 .externalId(String.valueOf(i))
                 .title("title" + i)
-                .price(BigDecimal.valueOf(Math.random()))
+                .price(BigDecimal.valueOf(new SecureRandom().nextInt()))
+                .pharmacyId(0L)
                 .build();
     }
 }

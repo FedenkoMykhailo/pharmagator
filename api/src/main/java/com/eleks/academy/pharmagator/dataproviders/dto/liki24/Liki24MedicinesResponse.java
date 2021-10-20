@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.dataproviders.dto.ds;
+package com.eleks.academy.pharmagator.dataproviders.dto.liki24;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDto {
+public class Liki24MedicinesResponse {
 
-    private String name;
-    private String slug;
-    private List<CategoryDto> children;
+    private Long totalPages;
+
+    private List<Liki24MedicineDto> items;
 
 }
