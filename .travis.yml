@@ -1,2 +1,21 @@
 language: java
 jdk: openjdk17
+
+sudo: required
+
+before_install:
+  - chmod +x gradlew
+
+addons:
+  sonarcloud:
+    organization: "fedenkomykhailo"
+    token:
+      # encrypted value of your token -- $travis encrypt <token>
+      secure: "IyQ2TFLx0mCqTLyJeE4WqRb3d9spT2m1/uxJOuQ4/frfNhFAG6/VLIi50TiMxXRcMYCyuou1DyGyiIQP4jYgZLnLGB9IikYVurGWUdBBaR/oBhpKZmrfWnaytV2aE4qSG21iIdgJX1SAaav9MHQI+TB50Ph04nZRPvrpQxYkzB8KC
+7O+eW4crlRjFt44WpQ89JqdLqCbsOnUgo/1wy6UN6xcjFXlxTN0MxqV7ti0rBDKtJgb00QPaIzi459y6ytHQRUfd3LzkroW+iutlzl/C/1WYVd5lYYnd+SRPp40yraA4BDt4hVTG278wu9y2lgt0c77M9UzxBGu8Sutp2wuyL0rLQMgnQcrbdkio
+mc0y/TEXyNHsxJIrbjnPJxu7BNiRywh0U5PB49NnvnpciTRS8t54H/zhu6Qlz0tSdmP3ewDYiM5YKO160FRLWb86plRmV5C2/5+X81Hj33bgTmz6yJ/Y+Ig1YdkFRc6vYIVdK6QqM90vf8eZ7P5hMDKVZZX+IwCjwE+eHA3yNKxhi2OmKbsgIW8s
+7IR1LOWhxXq8dIRoL5DLW8DDhHgKmDQdGjXs+VCRDREIJE8I1YsybPcE9swGAsGSC79PP53vl4i7F27ehnjdWdYg1WJqmIo6UJx1pFkuYPdiV70bOPRkA9qaY6lWilNIQ/0O5vl7kcjtUE="
+# encrypted value of your token
+
+script:
+  - ./gradlew sonarqube
