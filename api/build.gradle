@@ -15,8 +15,7 @@ sonarqube {
         property "sonar.projectKey", "FedenkoMykhailo_pharmagator"
         property "sonar.tests", "src/test"
         property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco.xml"
         property "sonar.junit.reportsPath", "build/test-results/*/TEST-*.xml"
     }
 }
@@ -35,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.postgresql:postgresql:42.2.24'
     implementation 'org.flywaydb:flyway-core:7.15.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
@@ -46,6 +46,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'org.dbunit:dbunit:2.7.2'
 }
 
 test {
@@ -57,8 +58,12 @@ jacocoTestReport {
     dependsOn test
     reports {
         xml.enabled(true)
-        csv.enabled(true)
+        csv.enabled(false)
         html.enabled(true)
+        //to create coverage report in html
+        html.destination file("${buildDir}/reports/coverage")
+        //for XML
+        xml.destination file("${buildDir}/reports/jacoco.xml")
     }
     finalizedBy jacocoTestCoverageVerification
 }
