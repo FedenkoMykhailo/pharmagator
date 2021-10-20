@@ -2,11 +2,15 @@ spring:
   datasource:
     url: jdbc:postgresql:pharmagator
     username: postgres
-    password: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    baseline-on-migrate: true
+
   jpa:
     hibernate:
       ddl-auto: validate
-
 
 pharmagator:
   data-providers:
@@ -14,3 +18,7 @@ pharmagator:
       url: https://api-int.apteka-ds.com.ua/api/v1
       category-fetch-url: /category-menu
       category-path: /cat-prods-by-page
+    apteka-liki24:
+      #     all products, not separated by category
+      url: https://liki24.com/vnext/api/catalogue/8000001/products
+
