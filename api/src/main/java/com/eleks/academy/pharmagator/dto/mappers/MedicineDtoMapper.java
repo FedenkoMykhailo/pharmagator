@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
  * Medicine DTO mapper that used BeanUtils library to transform from one entity to another
  */
 @Slf4j
-public class MedicineDtoResponseMapper {
+public class MedicineDtoMapper {
 
-    private MedicineDtoResponseMapper() {}
+    private MedicineDtoMapper() {}
 
     public static Medicine fromDto(MedicinesDto medicineDto) {
         log.debug("fromDto: map to medicine from medicineDto: {}", medicineDto);
@@ -31,7 +31,7 @@ public class MedicineDtoResponseMapper {
         return Objects.isNull(medicineDtos)
                 ? null
                 : medicineDtos.stream()
-                .map(MedicineDtoResponseMapper::fromDto)
+                .map(MedicineDtoMapper::fromDto)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class MedicineDtoResponseMapper {
         return Objects.isNull(medicineList)
                 ? null
                 : medicineList.stream()
-                .map(MedicineDtoResponseMapper::toDto)
+                .map(MedicineDtoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
