@@ -12,7 +12,6 @@ import java.util.List;
 public class DSMedicinesResponse {
 
     private Long total;
-
     private List<DSMedicineDto> products;
 
 }
