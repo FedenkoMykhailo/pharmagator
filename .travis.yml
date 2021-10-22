@@ -17,9 +17,12 @@ mc0y/TEXyNHsxJIrbjnPJxu7BNiRywh0U5PB49NnvnpciTRS8t54H/zhu6Qlz0tSdmP3ewDYiM5YKO16
 7IR1LOWhxXq8dIRoL5DLW8DDhHgKmDQdGjXs+VCRDREIJE8I1YsybPcE9swGAsGSC79PP53vl4i7F27ehnjdWdYg1WJqmIo6UJx1pFkuYPdiV70bOPRkA9qaY6lWilNIQ/0O5vl7kcjtUE="
 # encrypted value of your token
 
-jobs:
-  include:
-    - stage: "Unit Tests & SonarCloud Analysis"
-      script:
-        - ./gradlew jacocoTestReport
-        - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY
+script:
+  - ./gradlew sonarqube
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'
