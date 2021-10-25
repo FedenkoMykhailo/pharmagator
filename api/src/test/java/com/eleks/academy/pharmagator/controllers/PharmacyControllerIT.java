@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.net.URI;
 import java.sql.SQLException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class PharmacyControllerIT {
 
+    private static final String URL_TEMPLATE = "/pharmacies";
     private MockMvc mockMvc;
     private DatabaseDataSourceConnection dataSourceConnection;
 
@@ -45,7 +47,7 @@ public class PharmacyControllerIT {
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset());
 
-            this.mockMvc.perform(MockMvcRequestBuilders.get("/pharmacies"))
+            this.mockMvc.perform(MockMvcRequestBuilders.get(URL_TEMPLATE))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(jsonPath("$[*].id",
                             Matchers.hasItems(2021102101, 2021102102)));
