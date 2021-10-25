@@ -44,21 +44,21 @@ public class Scheduler {
             Medicine medicine = existMedicine.get();
             Optional<Price> optionalPrice = priceRepository.findByPharmacyIdAndMedicineId(medicine.getId(), dto.getPharmacyId());
 
+            Price price;
             if (optionalPrice.isPresent()) {
-                Price price = optionalPrice.get();
+                price = optionalPrice.get();
                 price.setPrice(dto.getPrice());
                 price.setUpdatedAt(Instant.now());
-                priceRepository.save(price);
             } else {
-                Price price = Price.builder()
+                price = Price.builder()
                         .medicineId(medicine.getId())
                         .pharmacyId(dto.getPharmacyId())
                         .externalId(dto.getExternalId())
                         .updatedAt(Instant.now())
                         .price(dto.getPrice())
                         .build();
-                priceRepository.save(price);
             }
+            priceRepository.save(price);
 
         } else {
             Medicine medicine = new Medicine();
