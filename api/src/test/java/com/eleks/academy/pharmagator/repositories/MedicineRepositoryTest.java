@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class MedicineRepositoryTest {
@@ -18,12 +17,12 @@ class MedicineRepositoryTest {
     @Test
     void findByTitle() {
 
-        Medicine medicine1 = new Medicine(1L, "Medicine test 1");
-        medicineRepository.save(medicine1);
+        Medicine medicine = new Medicine(1L, "Medicine test 1");
+        medicineRepository.save(medicine);
         var actual = medicineRepository.findByTitle("Medicine test 1");
 
         assertTrue(actual.isPresent());
-        assertEquals(medicine1, actual.get());
+        assertEquals(medicine, actual.get());
 
     }
 }

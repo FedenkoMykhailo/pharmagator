@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PharmacyServiceImplTest {
-    private Pharmacy pharmacy1;
+    private Pharmacy testPharmacy;
 
     @Mock
     private PharmacyRepository pharmacyRepository;
@@ -34,14 +34,14 @@ class PharmacyServiceImplTest {
 
     @BeforeEach
     void beforeEach() {
-        pharmacy1 = new Pharmacy(2020102501L, "Liki24 test", "http://test-template");
+        testPharmacy = new Pharmacy(2020102501L, "Liki24 test", "http://test-template");
     }
 
     @Test
     void testFindAllPharmacy() {
-        Mockito.when(pharmacyRepository.findAll()).thenReturn(List.of(pharmacy1));
+        Mockito.when(pharmacyRepository.findAll()).thenReturn(List.of(testPharmacy));
         var actual = pharmacyService.findAllPharmacy();
-        var expected = Stream.of(pharmacy1).map(PharmacyDtoMapper::toDto).collect(Collectors.toList());
+        var expected = Stream.of(testPharmacy).map(PharmacyDtoMapper::toDto).collect(Collectors.toList());
 
         assertFalse(actual.isEmpty());
         assertEquals(1, actual.size());
@@ -50,9 +50,9 @@ class PharmacyServiceImplTest {
 
     @Test
     void testFindPharmacyByIdWhenIdExists() {
-        Mockito.when(pharmacyRepository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.ofNullable(pharmacy1));
+        Mockito.when(pharmacyRepository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.ofNullable(testPharmacy));
         var actual = pharmacyService.findPharmacyById(Mockito.anyLong());
-        var expected = PharmacyDtoMapper.toDto(pharmacy1);
+        var expected = PharmacyDtoMapper.toDto(testPharmacy);
 
         assertEquals(expected, actual);
     }
@@ -68,8 +68,8 @@ class PharmacyServiceImplTest {
 
     @Test
     void testSavePharmacy() {
-        Mockito.when(pharmacyRepository.save(Mockito.any(Pharmacy.class))).thenReturn(pharmacy1);
-        var expected = PharmacyDtoMapper.toDto(pharmacy1);
+        Mockito.when(pharmacyRepository.save(Mockito.any(Pharmacy.class))).thenReturn(testPharmacy);
+        var expected = PharmacyDtoMapper.toDto(testPharmacy);
         var actual = pharmacyService.savePharmacy(expected);
 
         assertEquals(expected, actual);
@@ -77,9 +77,9 @@ class PharmacyServiceImplTest {
 
     @Test
     void testUpdatePharmacy() {
-        Mockito.when(pharmacyRepository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.ofNullable(pharmacy1));
-        Mockito.when(pharmacyRepository.save(Mockito.any(Pharmacy.class))).thenReturn(pharmacy1);
-        var expected = PharmacyDtoMapper.toDto(pharmacy1);
+        Mockito.when(pharmacyRepository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.ofNullable(testPharmacy));
+        Mockito.when(pharmacyRepository.save(Mockito.any(Pharmacy.class))).thenReturn(testPharmacy);
+        var expected = PharmacyDtoMapper.toDto(testPharmacy);
         var actual = pharmacyService.updatePharmacy(expected, Mockito.anyLong());
 
         assertEquals(expected, actual);
@@ -90,12 +90,13 @@ class PharmacyServiceImplTest {
 
     @Test
     void testDeletePharmacy() {
-        when(pharmacyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(pharmacy1));
-        doNothing().when(pharmacyRepository).delete(pharmacy1);
+        when(pharmacyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(testPharmacy));
+        doNothing().when(pharmacyRepository).delete(testPharmacy);
 
         pharmacyService.deletePharmacy(anyLong());
 
         verify(pharmacyRepository, times(1)).findById(anyLong());
-        verify(pharmacyRepository, times(1)).delete(pharmacy1);
+        verify(pharmacyRepository, times(1)).delete(testPharmacy);
     }
+
 }

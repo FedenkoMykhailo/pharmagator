@@ -31,8 +31,7 @@ class MedicineControllerTest {
     public static final String API_MEDICINE_URL = "/api/v1/medicine";
 
     private ObjectMapper mapper;
-    private MedicinesDto medicine1;
-    private MedicinesDto medicine2;
+    private MedicinesDto testMedicineDto;
 
     @MockBean
     private MedicineService medicineService;
@@ -43,15 +42,11 @@ class MedicineControllerTest {
     @BeforeEach
     void beforeEach() {
         mapper = new ObjectMapper();
-        medicine1 = MedicinesDto.builder()
+        testMedicineDto = MedicinesDto.builder()
                 .id(1L)
                 .title("test title_1")
                 .build();
 
-        medicine2 = MedicinesDto.builder()
-                .id(2L)
-                .title("test title_2")
-                .build();
     }
 
     @AfterEach
@@ -61,14 +56,14 @@ class MedicineControllerTest {
 
     @Test
     void getAllMedicines() throws Exception {
-        List<MedicinesDto> medicineList = List.of(medicine1, medicine2);
+        List<MedicinesDto> medicineList = List.of(testMedicineDto);
         when(medicineService.findAllMedicine()).thenReturn(medicineList);
 
         String actual = mockMvc.perform(get(API_MEDICINE_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$[0].id").value(medicine1.getId()))
-                .andExpect(jsonPath("$[0].title").value(medicine1.getTitle()))
+                .andExpect(jsonPath("$[0].id").value(testMedicineDto.getId()))
+                .andExpect(jsonPath("$[0].title").value(testMedicineDto.getTitle()))
                 .andExpect(status().isOk()).andDo(print()).andReturn().getResponse().getContentAsString();
 
         String expected = mapper.writeValueAsString(medicineList);
@@ -79,55 +74,55 @@ class MedicineControllerTest {
     @Test
     void getMedicineById() throws Exception {
 
-        when(medicineService.findMedicineById(Mockito.anyLong())).thenReturn(medicine2);
+        when(medicineService.findMedicineById(Mockito.anyLong())).thenReturn(testMedicineDto);
 
-        String actual = mockMvc.perform(get(API_MEDICINE_URL + "/2/")
+        String actual = mockMvc.perform(get(API_MEDICINE_URL + "/{id}/", testMedicineDto.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.id").value(medicine2.getId()))
-                .andExpect(jsonPath("$.title").value(medicine2.getTitle()))
+                .andExpect(jsonPath("$.id").value(testMedicineDto.getId()))
+                .andExpect(jsonPath("$.title").value(testMedicineDto.getTitle()))
                 .andExpect(status().isOk()).andDo(print()).andReturn().getResponse().getContentAsString();
 
-        String expected = mapper.writeValueAsString(medicine2);
+        String expected = mapper.writeValueAsString(testMedicineDto);
         assertEquals(expected, actual);
-        verify(medicineService, times(1)).findMedicineById(2L);
+        verify(medicineService, times(1)).findMedicineById(testMedicineDto.getId());
     }
 
     @Test
     void saveMedicine() throws Exception {
-        when(medicineService.saveMedicine(Mockito.any(MedicinesDto.class))).thenReturn(medicine1);
+        when(medicineService.saveMedicine(Mockito.any(MedicinesDto.class))).thenReturn(testMedicineDto);
         String actual = mockMvc.perform(post(API_MEDICINE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(medicine1))
+                        .content(mapper.writeValueAsString(testMedicineDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.id").value(medicine1.getId()))
-                .andExpect(jsonPath("$.title").value(medicine1.getTitle()))
+                .andExpect(jsonPath("$.id").value(testMedicineDto.getId()))
+                .andExpect(jsonPath("$.title").value(testMedicineDto.getTitle()))
                 .andExpect(status().isCreated()).andDo(print()).andReturn().getResponse().getContentAsString();
 
-        assertEquals(mapper.writeValueAsString(medicine1), actual);
-        verify(medicineService, times(1)).saveMedicine(medicine1);
+        assertEquals(mapper.writeValueAsString(testMedicineDto), actual);
+        verify(medicineService, times(1)).saveMedicine(testMedicineDto);
     }
 
     @Test
     void updateMedicine() throws Exception {
 
-        when(medicineService.updateMedicine(any(MedicinesDto.class), Mockito.anyLong())).thenReturn(medicine2);
+        when(medicineService.updateMedicine(any(MedicinesDto.class), Mockito.anyLong())).thenReturn(testMedicineDto);
 
-        String actual = mockMvc.perform(put(API_MEDICINE_URL + "/2/")
+        String actual = mockMvc.perform(put(API_MEDICINE_URL + "/{id}/", testMedicineDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(medicine2))
+                        .content(mapper.writeValueAsString(testMedicineDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.id").value(medicine2.getId()))
-                .andExpect(jsonPath("$.title").value(medicine2.getTitle()))
+                .andExpect(jsonPath("$.id").value(testMedicineDto.getId()))
+                .andExpect(jsonPath("$.title").value(testMedicineDto.getTitle()))
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn().getResponse().getContentAsString();
 
-        String expected = mapper.writeValueAsString(medicine2);
+        String expected = mapper.writeValueAsString(testMedicineDto);
 
         assertEquals(expected, actual);
-        verify(medicineService, times(1)).updateMedicine(medicine2, 2L);
+        verify(medicineService, times(1)).updateMedicine(testMedicineDto, testMedicineDto.getId());
 
     }
 
@@ -137,12 +132,12 @@ class MedicineControllerTest {
         String expected = "Medicine successfully deleted";
         doNothing().when(medicineService).deleteMedicine(Mockito.anyLong());
 
-        String actual = mockMvc.perform(delete(API_MEDICINE_URL + "/2/")
+        String actual = mockMvc.perform(delete(API_MEDICINE_URL + "/{id}/", testMedicineDto.getId())
                         .accept(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$").exists())
                 .andExpect(status().isOk()).andDo(print()).andReturn().getResponse().getContentAsString();
 
         assertEquals(expected, actual);
         verify(medicineService, times(1)).deleteMedicine(Mockito.anyLong());
-
     }
+
 }

@@ -34,8 +34,7 @@ public class PriceControllerTest {
     public static final String API_PRICE_URL = "/api/v1/price";
 
     private ObjectMapper mapper;
-    private Price price1;
-    private Price price2;
+    private Price testPrice;
 
     @MockBean
     private PriceService priceService;
@@ -48,7 +47,7 @@ public class PriceControllerTest {
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        price1 = Price.builder()
+        testPrice = Price.builder()
                 .pharmacyId(2L)
                 .medicineId(2021102501L)
                 .externalId("2021102501")
@@ -56,18 +55,11 @@ public class PriceControllerTest {
                 .updatedAt(Instant.now())
                 .build();
 
-        price2 = Price.builder()
-                .pharmacyId(2L)
-                .medicineId(2021102502L)
-                .externalId("2021102502")
-                .price(BigDecimal.valueOf(100))
-                .updatedAt(Instant.now())
-                .build();
     }
 
     @Test
     void testFindAllPrice() throws Exception {
-        var priceList = List.of(this.price1, price2);
+        var priceList = List.of(this.testPrice);
         Mockito.when(priceService.findAllPrices()).thenReturn(PriceDtoMapper.toDto(priceList));
 
         var actual = mockMvc.perform(get(API_PRICE_URL)
@@ -82,6 +74,5 @@ public class PriceControllerTest {
 
         assertEquals(expected, actual);
     }
-
 
 }

@@ -36,12 +36,12 @@ public class PharmacyLiki24DataProviderImpl implements DataProvider {
     private Stream<MedicineDto> fetchMedicineDto() {
         long pageIndex = 1L;
 
-        BiConsumer<Long, List<Liki24MedicinesResponse>> fillListByMedicineResponse = (page1, medicinesResponseList1) -> {
-            Liki24MedicinesResponse medicinesResponse = getLiki24MedicinesResponse(page1);
+        BiConsumer<Long, List<Liki24MedicinesResponse>> fillListByMedicineResponse = (page, medicinesResponseList1) -> {
+            Liki24MedicinesResponse medicinesResponse = getLiki24MedicinesResponse(page);
             medicinesResponseList1.add(medicinesResponse);
         };
 
-        Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(1L);
+        Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(pageIndex);
 
         if (liki24MedicinesResponse != null) {
             var start = System.currentTimeMillis();

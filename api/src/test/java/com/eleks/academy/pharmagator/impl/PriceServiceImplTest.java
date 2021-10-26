@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PriceServiceImplTest {
 
-    private Price price1;
+    private Price testPrice;
 
     @Mock
     private PriceRepository priceRepository;
@@ -37,7 +37,7 @@ class PriceServiceImplTest {
 
     @BeforeEach
     void beforeEach() {
-        price1 = Price.builder()
+        testPrice = Price.builder()
                 .pharmacyId(2L)
                 .medicineId(2021102501L)
                 .price(BigDecimal.valueOf(150))
@@ -48,9 +48,9 @@ class PriceServiceImplTest {
 
     @Test
     void testFindAllPrices() {
-        Mockito.when(priceRepository.findAll()).thenReturn(List.of(price1));
+        Mockito.when(priceRepository.findAll()).thenReturn(List.of(testPrice));
         var actual = priceService.findAllPrices();
-        var expected = Stream.of(price1).map(PriceDtoMapper::toDto).collect(Collectors.toList());
+        var expected = Stream.of(testPrice).map(PriceDtoMapper::toDto).collect(Collectors.toList());
         assertFalse(actual.isEmpty());
         assertEquals(1, actual.size());
         assertEquals(expected, actual);
@@ -59,9 +59,9 @@ class PriceServiceImplTest {
     @Test
     void testFindPriceByIdWhenIdExists() {
         Mockito.when(priceRepository.findByPharmacyIdAndMedicineId(Mockito.anyLong(), Mockito.anyLong()))
-                .thenReturn(Optional.ofNullable(price1));
+                .thenReturn(Optional.ofNullable(testPrice));
         var actual = priceService.findPriceById(Mockito.anyLong(), Mockito.anyLong());
-        var expected = PriceDtoMapper.toDto(price1);
+        var expected = PriceDtoMapper.toDto(testPrice);
 
         assertEquals(expected, actual);
     }
@@ -80,8 +80,8 @@ class PriceServiceImplTest {
 
     @Test
     void testSavePrice() {
-        Mockito.when(priceRepository.save(Mockito.any(Price.class))).thenReturn(price1);
-        var expected = PriceDtoMapper.toDto(price1);
+        Mockito.when(priceRepository.save(Mockito.any(Price.class))).thenReturn(testPrice);
+        var expected = PriceDtoMapper.toDto(testPrice);
         var actual = priceService.savePrice(expected);
 
         assertEquals(expected, actual);
@@ -90,9 +90,9 @@ class PriceServiceImplTest {
     @Test
     void testUpdatePrice() {
         Mockito.when(priceRepository.findByPharmacyIdAndMedicineId(Mockito.anyLong(), Mockito.anyLong()))
-                .thenReturn(Optional.ofNullable(price1));
-        Mockito.when(priceRepository.save(Mockito.any(Price.class))).thenReturn(price1);
-        var expected = PriceDtoMapper.toDto(price1);
+                .thenReturn(Optional.ofNullable(testPrice));
+        Mockito.when(priceRepository.save(Mockito.any(Price.class))).thenReturn(testPrice);
+        var expected = PriceDtoMapper.toDto(testPrice);
         var actual = priceService.updatePrice(expected, Mockito.anyLong(), Mockito.anyLong());
 
         assertEquals(expected, actual);
@@ -104,12 +104,13 @@ class PriceServiceImplTest {
     @Test
     void testDeletePrice() {
         when(priceRepository.findByPharmacyIdAndMedicineId(Mockito.anyLong(), Mockito.anyLong()))
-                .thenReturn(Optional.ofNullable(price1));
-        doNothing().when(priceRepository).delete(price1);
+                .thenReturn(Optional.ofNullable(testPrice));
+        doNothing().when(priceRepository).delete(testPrice);
 
         priceService.deletePrice(Mockito.anyLong(), Mockito.anyLong());
 
         verify(priceRepository, times(1)).findByPharmacyIdAndMedicineId(Mockito.anyLong(), Mockito.anyLong());
-        verify(priceRepository, times(1)).delete(price1);
+        verify(priceRepository, times(1)).delete(testPrice);
     }
+
 }

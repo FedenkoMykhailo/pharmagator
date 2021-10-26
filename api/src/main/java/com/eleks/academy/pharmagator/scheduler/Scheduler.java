@@ -47,27 +47,26 @@ public class Scheduler {
                         price.setPrice(dto.getPrice());
                         price.setUpdatedAt(Instant.now());
                         priceRepository.save(price);
-                    }, () -> priceRepository.save(Price.builder()
-                            .medicineId(medicine.getId())
-                            .pharmacyId(dto.getPharmacyId())
-                            .externalId(dto.getExternalId())
-                            .updatedAt(Instant.now())
-                            .price(dto.getPrice())
-                            .build()));
+                    }, () -> priceRepository.save(getPrice(dto, medicine)));
         }, () -> {
             Medicine medicine = new Medicine();
             EntityMapper.fromDto(dto, medicine);
             medicineRepository.save(medicine);
             medicineRepository.flush();
-            Price price = Price.builder()
-                    .pharmacyId(dto.getPharmacyId())
-                    .medicineId(medicineRepository.findByTitle(medicine.getTitle()).get().getId())
-                    .price(dto.getPrice())
-                    .externalId(dto.getExternalId())
-                    .updatedAt(Instant.now())
-                    .build();
+            Price price = getPrice(dto, medicine);
             priceRepository.save(price);
             priceRepository.flush();
         });
     }
+
+    private Price getPrice(MedicineDto dto, Medicine medicine) {
+        return Price.builder()
+                .pharmacyId(dto.getPharmacyId())
+                .medicineId(medicineRepository.findByTitle(medicine.getTitle()).get().getId())
+                .price(dto.getPrice())
+                .externalId(dto.getExternalId())
+                .updatedAt(Instant.now())
+                .build();
+    }
+
 }
