@@ -40,27 +40,21 @@ public class Scheduler {
 
         Optional<Medicine> existMedicine = medicineRepository.findByTitle(dto.getTitle());
 
-        if (existMedicine.isPresent()) {
-            Medicine medicine = existMedicine.get();
-            Optional<Price> optionalPrice = priceRepository.findByPharmacyIdAndMedicineId(medicine.getId(), dto.getPharmacyId());
-
-            Price price;
-            if (optionalPrice.isPresent()) {
-                price = optionalPrice.get();
-                price.setPrice(dto.getPrice());
-                price.setUpdatedAt(Instant.now());
-            } else {
-                price = Price.builder()
-                        .medicineId(medicine.getId())
-                        .pharmacyId(dto.getPharmacyId())
-                        .externalId(dto.getExternalId())
-                        .updatedAt(Instant.now())
-                        .price(dto.getPrice())
-                        .build();
-            }
-            priceRepository.save(price);
-
-        } else {
+        existMedicine.ifPresentOrElse(medicine -> {
+            priceRepository
+                    .findByPharmacyIdAndMedicineId(medicine.getId(), dto.getPharmacyId())
+                    .ifPresentOrElse(price -> {
+                        price.setPrice(dto.getPrice());
+                        price.setUpdatedAt(Instant.now());
+                        priceRepository.save(price);
+                    }, () -> priceRepository.save(Price.builder()
+                            .medicineId(medicine.getId())
+                            .pharmacyId(dto.getPharmacyId())
+                            .externalId(dto.getExternalId())
+                            .updatedAt(Instant.now())
+                            .price(dto.getPrice())
+                            .build()));
+        }, () -> {
             Medicine medicine = new Medicine();
             EntityMapper.fromDto(dto, medicine);
             medicineRepository.save(medicine);
@@ -74,8 +68,6 @@ public class Scheduler {
                     .build();
             priceRepository.save(price);
             priceRepository.flush();
-        }
-
+        });
     }
-
 }
