@@ -26,11 +26,9 @@ mc0y/TEXyNHsxJIrbjnPJxu7BNiRywh0U5PB49NnvnpciTRS8t54H/zhu6Qlz0tSdmP3ewDYiM5YKO16
 #        - sonar-scanner
 
 script:
-  - ./gradlew build test sonarqube
+  - ./gradlew build jacocoTestReport sonarqube
   - ./gradlew sonarqube
   - ./gradlew -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY
-  - sonar-scanner
-  - ./gradlew sonarqube
 
 cache:
   directories:
