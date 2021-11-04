@@ -20,3 +20,4 @@ pharmagator:
       page-size: 400
     apteka-liki24:
       url: https://liki24.com/vnext/api/catalogue/8000001/products
+      initial-page-index: 1
