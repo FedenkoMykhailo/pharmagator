@@ -47,8 +47,9 @@ public class PharmacyLiki24DataProvider implements DataProvider {
 
             Long totalPages = liki24MedicinesResponse.getTotalPages();
             List<Liki24MedicinesResponse> medicinesResponseList = new ArrayList<>();
+            medicinesResponseList.add(liki24MedicinesResponse);
 
-            LongStream.rangeClosed(pageIndex, totalPages)
+            LongStream.rangeClosed(2L, totalPages)
                     .parallel()
                     .forEach(pageNumber -> fillListByMedicineResponse.accept(pageNumber, medicinesResponseList));
 
