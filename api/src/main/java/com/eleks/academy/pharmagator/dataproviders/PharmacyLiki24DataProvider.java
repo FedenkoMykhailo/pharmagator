@@ -6,6 +6,7 @@ import com.eleks.academy.pharmagator.dataproviders.dto.liki24.Liki24MedicinesRes
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -27,20 +28,18 @@ public class PharmacyLiki24DataProvider implements DataProvider {
     @Qualifier("pharmacyLiki24WebClient")
     private final WebClient webClient;
 
+    @Value("${pharmagator.data-providers.apteka-liki24.initial-page-index}")
+    private Long initialPageIndex;
+
     @Override
     public Stream<MedicineDto> loadData() {
-        return fetchMedicineDto();
-    }
-
-    private Stream<MedicineDto> fetchMedicineDto() {
-        long pageIndex = 1L;
 
         BiConsumer<Long, List<Liki24MedicinesResponse>> fillListByMedicineResponse = (page, medicinesResponseList1) -> {
             Liki24MedicinesResponse medicinesResponse = getLiki24MedicinesResponse(page);
             medicinesResponseList1.add(medicinesResponse);
         };
 
-        Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(pageIndex);
+        Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(initialPageIndex);
 
         if (liki24MedicinesResponse != null) {
             log.info("Start fetching: " + LocalDateTime.now());
@@ -49,7 +48,8 @@ public class PharmacyLiki24DataProvider implements DataProvider {
             List<Liki24MedicinesResponse> medicinesResponseList = new ArrayList<>();
             medicinesResponseList.add(liki24MedicinesResponse);
 
-            LongStream.rangeClosed(2L, totalPages)
+            long startFetchPage = initialPageIndex + 1;
+            LongStream.rangeClosed(startFetchPage, totalPages)
                     .parallel()
                     .forEach(pageNumber -> fillListByMedicineResponse.accept(pageNumber, medicinesResponseList));
 
