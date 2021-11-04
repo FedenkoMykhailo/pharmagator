@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -36,9 +37,7 @@ public class PharmacyLiki24DataProvider implements DataProvider {
 
         BiConsumer<Long, List<Liki24MedicinesResponse>> fillListByMedicineResponse = (page, medicinesResponseList1) -> {
             Liki24MedicinesResponse medicinesResponse = getLiki24MedicinesResponse(page);
-            if (medicinesResponse != null) {
-                medicinesResponseList1.add(medicinesResponse);
-            }
+            medicinesResponseList1.add(medicinesResponse);
         };
 
         Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(initialPageIndex);
@@ -57,6 +56,7 @@ public class PharmacyLiki24DataProvider implements DataProvider {
 
             log.info("End Fetching: " + LocalDateTime.now());
             return medicinesResponseList.stream()
+                    .filter(Objects::nonNull)
                     .map(Liki24MedicinesResponse::getItems)
                     .flatMap(Collection::stream)
                     .map(this::mapToDataProviderMedicineDto);
