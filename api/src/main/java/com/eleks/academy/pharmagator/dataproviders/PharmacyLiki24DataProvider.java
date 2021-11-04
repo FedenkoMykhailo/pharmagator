@@ -36,7 +36,9 @@ public class PharmacyLiki24DataProvider implements DataProvider {
 
         BiConsumer<Long, List<Liki24MedicinesResponse>> fillListByMedicineResponse = (page, medicinesResponseList1) -> {
             Liki24MedicinesResponse medicinesResponse = getLiki24MedicinesResponse(page);
-            medicinesResponseList1.add(medicinesResponse);
+            if (medicinesResponse != null) {
+                medicinesResponseList1.add(medicinesResponse);
+            }
         };
 
         Liki24MedicinesResponse liki24MedicinesResponse = getLiki24MedicinesResponse(initialPageIndex);
