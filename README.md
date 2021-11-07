@@ -21,16 +21,6 @@ Before sending any pull request, please discuss requirements/changes to be imple
 
 ### 3.2. How to run
 
-1. You should create database `pharmagator` and set your db username and password in application.yml .
-
-## Special Thanks :heart:
-
-These people rock!
-
-- [Oleksandr](https://github.com/Oleksandr-Eleks) - Oleksandr
-- [Sergiy](https://github.com/sergvasylchak) - Sergriy
-- [Mykola](https://github.com/MykolaPankiv) - Mykola
-- [Pavlo](https://github.com/pavlosloboda) - Pavlo
-- [Maksym](https://github.com/Oleksandr-Eleks/pharmagator) - Maksym
+1. You should create database `pharmagator` and set your db username and password as `'postgres'` .
 
 
