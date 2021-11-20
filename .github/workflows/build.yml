@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [main, develop, dev]
+    branches: [main, develop, dev, mysonarcloud]
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
